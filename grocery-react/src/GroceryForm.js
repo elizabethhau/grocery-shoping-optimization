@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Multiselect } from 'multiselect-react-dropdown';
 // import {FormControl, Form} from 'react-bootstrap'
-import {Form, Button} from 'semantic-ui-react';
+import { Form, Button, Card, Container, List } from 'semantic-ui-react';
 
 const GroceryForm = props => {
   const TYPE_INGREDIENT = "ingredient"
@@ -15,6 +15,9 @@ const GroceryForm = props => {
   ]
   const [selectedIngredients, setSelectedIngredients] = useState([])
   const [selectedRecipes, setSelectedRecipes] = useState([])
+  const [outputUserName, setOutputUserName] = useState('')
+  const [outputIngredients, setOutputIngredients] = useState([])
+  const [outputRecipes, setOutputRecipes] = useState([])
 
   const onSelect = (selectedList, selectedItem) => {
     console.log('got here')
@@ -49,71 +52,98 @@ const GroceryForm = props => {
   }
 
   return (
-    <Form>
-      {username ? 'Hello, ' + username : ''}
-      <p>Enter your name:</p>
-      <Form.Field>
-        <input
-        type='text'
-        onChange={e => setUsername(e.target.value)}
-      />
-      </Form.Field>
-      <Form.Field>
-        <div className="flex-box">
-        <Multiselect
-        options={ingredientOptions} // Options to display in the dropdown
-        selectedValues={selectedIngredients} // Preselected value to persist in dropdown
-        onSelect={onSelect} // Function will trigger on select event
-        onRemove={onRemove} // Function will trigger on remove event
-        displayValue="name" // Property name to display in the dropdown options
-        placeholder="Select items to purchase"
-        id="ingredients"
-      />
-      </div>
-      </Form.Field>
+    <Container>
+      <Form>
+        {username ? 'Hello, ' + username : ''}
+        <p>Enter your name:</p>
+        <Form.Field>
+          <input
+            type='text'
+            onChange={e => setUsername(e.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <div className="flex-box">
+            <Multiselect
+              options={ingredientOptions} // Options to display in the dropdown
+              selectedValues={selectedIngredients} // Preselected value to persist in dropdown
+              onSelect={onSelect} // Function will trigger on select event
+              onRemove={onRemove} // Function will trigger on remove event
+              displayValue="name" // Property name to display in the dropdown options
+              placeholder="Select items to purchase"
+              id="ingredients"
+            />
+          </div>
+        </Form.Field>
 
-      <Form.Field>
-        <div className="flex-box">
-        <Multiselect
-        options={recipeOptions} // Options to display in the dropdown
-        selectedValues={selectedRecipes} // Preselected value to persist in dropdown
-        onSelect={onSelect} // Function will trigger on select event
-        onRemove={onRemove} // Function will trigger on remove event
-        displayValue="name" // Property name to display in the dropdown options
-        placeholder="Select recipes to purchase"
-        id="recipes"
-      />
-      </div>
-      </Form.Field>
+        <Form.Field>
+          <div className="flex-box">
+            <Multiselect
+              options={recipeOptions} // Options to display in the dropdown
+              selectedValues={selectedRecipes} // Preselected value to persist in dropdown
+              onSelect={onSelect} // Function will trigger on select event
+              onRemove={onRemove} // Function will trigger on remove event
+              displayValue="name" // Property name to display in the dropdown options
+              placeholder="Select recipes to purchase"
+              id="recipes"
+            />
+          </div>
+        </Form.Field>
 
-      <Form.Field>
-        <Button onClick={async () => {
-          const requestData = {
-            userName: username,
-            ingredients: selectedIngredients,
-            recipes: selectedRecipes
-          }
-          const response = await fetch('/api/request', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-          })
+        <Form.Field>
+          <Button onClick={async () => {
+            const requestData = {
+              userName: username,
+              ingredients: selectedIngredients,
+              recipes: selectedRecipes
+            }
+            const response = await fetch('/api/request', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestData)
+            })
 
-          if (response.ok) {
-            console.log('response successful')
-            const result = await response.text()
-            console.log(result)
-            console.log(JSON.parse(result))
+            if (response.ok) {
+              console.log('response successful')
+              let result = await response.text()
+              console.log(result)
+              console.log(JSON.parse(result))
+              result = JSON.parse(result)
+              setOutputUserName(result.userName)
+              setOutputIngredients(result.ingredients)
+              setOutputRecipes(result.recipes)
 
-          } else {
-            console.log('response failed')
-          }
+            } else {
+              console.log('response failed')
+            }
 
-        }}>Submit</Button>
-      </Form.Field>
-    </Form>
+          }}>Submit</Button>
+        </Form.Field>
+      </Form>
+      {outputUserName && (outputIngredients || outputRecipes) && 
+      <Card>
+        <Card.Content header={outputUserName}/>
+        <Card.Content>
+          <Card.Description>
+            {/* <List.bulleted>
+              {outputIngredients.map(ingredient => {
+                console.log(ingredient)
+                
+                  // return (
+                  //   <List.Item>ingredient.name</List.Item>
+                  // )
+            })}
+            </List.bulleted>
+             */}
+          </Card.Description>
+        </Card.Content>
+      </Card>
+      }
+      
+    </Container>
+
 
   );
 }
