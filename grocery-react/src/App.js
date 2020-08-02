@@ -15,7 +15,7 @@ function App() {
   }, []);
   return (
     <main>
-      <h1>Create React App + Python API!!</h1>
+      <h1>Grocery Shopping Optimization</h1>
       <h2>The date according to Python is:</h2>
       <p>{result ? result : 'Loading result...'}</p>
       <GroceryForm></GroceryForm>
