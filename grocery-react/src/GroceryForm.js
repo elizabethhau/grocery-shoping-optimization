@@ -148,7 +148,7 @@ const GroceryForm = props => {
             </Card.Description>
           </Card.Content>
         </Card>
-        : submitted &&
+        : submitted && !isLoading &&
         <Message color="red">Please provide your name and select at least one item from the grocery shopping dropdowns</Message>
       }
     </Container>
