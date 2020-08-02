@@ -53,7 +53,7 @@ const GroceryForm = props => {
   return (
     <Container>
       <Form>
-        {username ? 'Hello, ' + username : ''}
+        <h3>{username ? 'Hello, ' + username : ''}</h3>
         <p>Enter your name:</p>
         <Form.Field>
           <input
