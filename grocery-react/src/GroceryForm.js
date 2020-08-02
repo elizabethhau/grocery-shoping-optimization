@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Multiselect } from 'multiselect-react-dropdown';
-// import {FormControl, Form} from 'react-bootstrap'
-import { Form, Button, Card, Container, List } from 'semantic-ui-react';
+import { Form, Button, Card, Container, List, Message } from 'semantic-ui-react';
 
 const GroceryForm = props => {
   const TYPE_INGREDIENT = "ingredient"
@@ -18,27 +17,23 @@ const GroceryForm = props => {
   const [outputUserName, setOutputUserName] = useState('')
   const [outputIngredients, setOutputIngredients] = useState([])
   const [outputRecipes, setOutputRecipes] = useState([])
+  const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const onSelect = (selectedList, selectedItem) => {
-    console.log('got here')
     const typeUpdated = selectedItem.type
-    console.log(selectedItem.type)
-    console.log('selectedValues', selectedIngredients)
     console.log('selected list', selectedList)
     console.log('selected item type', typeUpdated)
-    // setSelectedValues
 
     if (typeUpdated === TYPE_INGREDIENT) {
       setSelectedIngredients(selectedList)
     } else if (typeUpdated === TYPE_RECIPE) {
       setSelectedRecipes(selectedList)
     }
-    console.log('selectedValues', selectedIngredients)
   }
 
   const onRemove = (removedList, removedItem) => {
     console.log('in remove')
-    console.log('removed list', removedList)
     console.log('removed item', removedItem)
     const typeUpdated = removedItem.type
 
@@ -50,6 +45,10 @@ const GroceryForm = props => {
       setSelectedRecipes(updatedList)
     }
   }
+
+  useEffect(() => {
+    setOutputRecipes(outputRecipes)
+  }, [outputRecipes])
 
   return (
     <Container>
@@ -63,35 +62,33 @@ const GroceryForm = props => {
           />
         </Form.Field>
         <Form.Field>
-          <div className="flex-box">
-            <Multiselect
-              options={ingredientOptions} // Options to display in the dropdown
-              selectedValues={selectedIngredients} // Preselected value to persist in dropdown
-              onSelect={onSelect} // Function will trigger on select event
-              onRemove={onRemove} // Function will trigger on remove event
-              displayValue="name" // Property name to display in the dropdown options
-              placeholder="Select items to purchase"
-              id="ingredients"
-            />
-          </div>
+          <Multiselect
+            options={ingredientOptions} // Options to display in the dropdown
+            selectedValues={selectedIngredients} // Preselected value to persist in dropdown
+            onSelect={onSelect} // Function will trigger on select event
+            onRemove={onRemove} // Function will trigger on remove event
+            displayValue="name" // Property name to display in the dropdown options
+            placeholder="Select items to purchase"
+            id="ingredients"
+          />
         </Form.Field>
 
         <Form.Field>
-          <div className="flex-box">
-            <Multiselect
-              options={recipeOptions} // Options to display in the dropdown
-              selectedValues={selectedRecipes} // Preselected value to persist in dropdown
-              onSelect={onSelect} // Function will trigger on select event
-              onRemove={onRemove} // Function will trigger on remove event
-              displayValue="name" // Property name to display in the dropdown options
-              placeholder="Select recipes to purchase"
-              id="recipes"
-            />
-          </div>
+          <Multiselect
+            options={recipeOptions} // Options to display in the dropdown
+            selectedValues={selectedRecipes} // Preselected value to persist in dropdown
+            onSelect={onSelect} // Function will trigger on select event
+            onRemove={onRemove} // Function will trigger on remove event
+            displayValue="name" // Property name to display in the dropdown options
+            placeholder="Select recipes to purchase"
+            id="recipes"
+          />
         </Form.Field>
 
         <Form.Field>
-          <Button onClick={async () => {
+          <Button primary loading={isLoading} onClick={async () => {
+            setSubmitted(true)
+            setIsLoading(true)
             const requestData = {
               userName: username,
               ingredients: selectedIngredients,
@@ -114,37 +111,47 @@ const GroceryForm = props => {
               setOutputUserName(result.userName)
               setOutputIngredients(result.ingredients)
               setOutputRecipes(result.recipes)
+              setIsLoading(false)
 
             } else {
               console.log('response failed')
+              setIsLoading(false)
             }
 
           }}>Submit</Button>
         </Form.Field>
       </Form>
-      {outputUserName && (outputIngredients || outputRecipes) && 
-      <Card>
-        <Card.Content header={outputUserName}/>
-        <Card.Content>
-          <Card.Description>
-            {/* <List.bulleted>
-              {outputIngredients.map(ingredient => {
-                console.log(ingredient)
-                
-                  // return (
-                  //   <List.Item>ingredient.name</List.Item>
-                  // )
-            })}
-            </List.bulleted>
-             */}
-          </Card.Description>
-        </Card.Content>
-      </Card>
+
+      {submitted && outputUserName && (outputIngredients || outputRecipes) ?
+        <Card fluid color='yellow' >
+          <Card.Content header={`Shopping Instructions for ${outputUserName}`} />
+          <Card.Content>
+            <Card.Description>
+              <List bulleted>
+                {outputIngredients && outputIngredients.map(ingredient => {
+                  console.log('got in output ingredients map!!')
+                  console.log(ingredient)
+                  return (
+                    <List.Item key={ingredient.name}>{ingredient.name}</List.Item>
+                  )
+                })}
+
+                {outputRecipes && outputRecipes.map(recipe => {
+                  console.log('got in output recipe map!!')
+                  console.log(recipe)
+                  return (
+                    <List.Item key={recipe.name}>{recipe.name}</List.Item>
+                  )
+                })}
+              </List>
+
+            </Card.Description>
+          </Card.Content>
+        </Card>
+        : submitted &&
+        <Message color="red">Please provide your name and select at least one item from the grocery shopping dropdowns</Message>
       }
-      
     </Container>
-
-
   );
 }
 
