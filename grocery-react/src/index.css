@@ -12,11 +12,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-
-.flex-box{
-  padding: 1rem;
-  border: 2px solid #fff;
-  /* color: #fff; */
-  text-align: center;
-}
