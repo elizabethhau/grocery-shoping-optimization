@@ -12,5 +12,5 @@ def result(path):
     recipes = input['recipes']
     return jsonify(input)
     # return Response("requested method is: " + request.method + ' user name is: ' + userName)
-    if request.method == 'POST':
-        console.log('recognized POST method')
+    # if request.method == 'POST':
+    #     console.log('recognized POST method')
