@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { Form, Button, Card, Container, List, Message } from 'semantic-ui-react';
+import * as Constants from './DataConstants'
 
 const GroceryForm = props => {
   const TYPE_INGREDIENT = "ingredient"
   const TYPE_RECIPE = "recipe"
   const [username, setUsername] = useState(props.username ? props.username : '')
-  const ingredientOptions = [{ name: 'Apple', id: 1, type: TYPE_INGREDIENT }, { name: 'Banana', id: 2, type: TYPE_INGREDIENT }, { name: 'Ice cream', id: 3, type: TYPE_INGREDIENT }]
+  const itemOptions = Constants.items
   const recipeOptions = [
     { name: 'Garlic Chicken (Butter, Chicken breast, Garlic powder, Onion powder, salt)', id: 1, type: TYPE_RECIPE },
     { name: 'Butternut Squash (Butternut squash, Olive Oil, Garlic, Salt, Ground Black Pepper)', id: 2, type: TYPE_RECIPE },
@@ -14,9 +15,7 @@ const GroceryForm = props => {
   ]
   const [selectedIngredients, setSelectedIngredients] = useState([])
   const [selectedRecipes, setSelectedRecipes] = useState([])
-  const [outputUserName, setOutputUserName] = useState('')
-  const [outputIngredients, setOutputIngredients] = useState([])
-  const [outputRecipes, setOutputRecipes] = useState([])
+  const [outputInstructions, setOutputInstructions] = useState([])
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -47,8 +46,8 @@ const GroceryForm = props => {
   }
 
   useEffect(() => {
-    setOutputRecipes(outputRecipes)
-  }, [outputRecipes])
+    setOutputInstructions(outputInstructions)
+  }, [outputInstructions])
 
   return (
     <Container>
@@ -63,7 +62,7 @@ const GroceryForm = props => {
         </Form.Field>
         <Form.Field>
           <Multiselect
-            options={ingredientOptions} // Options to display in the dropdown
+            options={itemOptions} // Options to display in the dropdown
             selectedValues={selectedIngredients} // Preselected value to persist in dropdown
             onSelect={onSelect} // Function will trigger on select event
             onRemove={onRemove} // Function will trigger on remove event
@@ -94,7 +93,7 @@ const GroceryForm = props => {
               ingredients: selectedIngredients,
               recipes: selectedRecipes
             }
-            const response = await fetch('/api/request', {
+            const response = await fetch('/api/optimize', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -108,10 +107,11 @@ const GroceryForm = props => {
               console.log(result)
               console.log(JSON.parse(result))
               result = JSON.parse(result)
-              setOutputUserName(result.userName)
-              setOutputIngredients(result.ingredients)
-              setOutputRecipes(result.recipes)
+              // setOutputUserName(result.userName)
+              setOutputInstructions(result.instructions)
+              // setOutputRecipes(result.recipes)
               setIsLoading(false)
+              console.log(result.instructions)
 
             } else {
               console.log('response failed')
@@ -122,27 +122,42 @@ const GroceryForm = props => {
         </Form.Field>
       </Form>
 
-      {submitted && outputUserName && (outputIngredients || outputRecipes) ?
+      {submitted && username && (outputInstructions) ?
         <Card fluid color='yellow' >
-          <Card.Content header={`Shopping Instructions for ${outputUserName}`} />
+          <Card.Content header={`Shopping Instructions for ${username}`} />
           <Card.Content>
             <Card.Description>
               <List bulleted>
-                {outputIngredients && outputIngredients.map(ingredient => {
+                {outputInstructions && outputInstructions.map(step => {
                   console.log('got in output ingredients map!!')
-                  console.log(ingredient)
+                  console.log(step)
                   return (
-                    <List.Item key={ingredient.name}>{ingredient.name}</List.Item>
+                    <Fragment>
+                      <List.Item key={step.section}>{step.section}</List.Item>
+                      <List.List>
+                        {
+                          step.items.map(item => {
+                            console.log('got in sub list')
+                            console.log(item)
+                            return (
+                              // <List.Item key={item} content={item}/>
+                              <li>{item}</li>
+                            )
+                          })
+                        }
+                      </List.List>
+                    </Fragment>
+
                   )
                 })}
 
-                {outputRecipes && outputRecipes.map(recipe => {
+                {/* {outputRecipes && outputRecipes.map(recipe => {
                   console.log('got in output recipe map!!')
                   console.log(recipe)
                   return (
                     <List.Item key={recipe.name}>{recipe.name}</List.Item>
                   )
-                })}
+                })} */}
               </List>
 
             </Card.Description>
