@@ -309,65 +309,129 @@ def optimize_shopping(grocery_list, IDother, Utility, Item, Time, Energy, Protei
     for i in path:
         if path[i].x != 0:
             path_out[path[i].x] = i
-    return(m, item_purchased_out, item_needed_out, section_visited_out, order_of_visits_out, recipe_complete_out, path_out, item_sections)
+    print('PATH OUT')
+    print(path_out)
+    # print(path)
+    print(section_visited_out)
+    return(m, item_purchased_out, item_needed_out, order_of_visits, path,section_visited, item_sections)
+    # return(m, item_purchased_out, item_needed_out, section_visited_out, order_of_visits_out, recipe_complete_out, path_out, item_sections)
     # return(m, item_purchased_out, item_needed_out, section_visited_out, order_of_visits_out, recipe_complete_out, path_out, item_sections)
 
 
-grocery_list = [['Peppers, jalapeno, raw', 'Snacks, tortilla chips, unsalted, white corn', 'Chicken, broiler, rotisserie, BBQ, drumstick meat and skin', 'Cheese, low fat, cheddar or colby', 'PACE, Chipotle Chunky Salsa', 'Queso cotija', 'Avocados, raw, California'],
-['Lemon juice, raw', 'Potatoes, red, flesh and skin, raw', 'Oil, olive, salad or cooking', 'Spices, chili powder', 'Fish, cod, Pacific, untreated, cooked', 'Onions, spring or scallions (includes tops and bulb), raw'],
-['Beans, snap, green, frozen, cooked, boiled, drained without salt', 'Lamb, domestic, foreshank, separable lean and fat, trimmed to 1/8" fat, choice, raw', 'Carrots, baby, raw', 'Onions, raw', 'Wheat flour, whole-grain, soft wheat', 'Alcoholic beverage, wine, cooking', 'Soup, chicken broth, canned, less/reduced sodium']]
-
+# grocery_list = [['Peppers, jalapeno, raw', 'Snacks, tortilla chips, unsalted, white corn', 'Chicken, broiler, rotisserie, BBQ, drumstick meat and skin', 'Cheese, low fat, cheddar or colby', 'PACE, Chipotle Chunky Salsa', 'Queso cotija', 'Avocados, raw, California'],
+# ['Lemon juice, raw', 'Potatoes, red, flesh and skin, raw', 'Oil, olive, salad or cooking', 'Spices, chili powder', 'Fish, cod, Pacific, untreated, cooked', 'Onions, spring or scallions (includes tops and bulb), raw'],
+# ['Beans, snap, green, frozen, cooked, boiled, drained without salt', 'Lamb, domestic, foreshank, separable lean and fat, trimmed to 1/8" fat, choice, raw', 'Carrots, baby, raw', 'Onions, raw', 'Wheat flour, whole-grain, soft wheat', 'Alcoholic beverage, wine, cooking', 'Soup, chicken broth, canned, less/reduced sodium']]
+grocery_list = [['Pie, coconut custard, commercially prepared', 'Ice creams, vanilla', 'Butter, without salt']]
 def optimize(grocery_list):
-    m, item_purchased, item_needed, sections_visited, order_of_visits, recipe_complete, path, item_sections = optimize_shopping(grocery_list, IDother, Utility, Item, Time, Energy, Protein, Fat, Carb, Sugar, FoodGroup, Distance)
+    m, item_purchased, item_needed, order_of_visits, path,section_visited, item_sections = optimize_shopping(grocery_list, IDother, Utility, Item, Time, Energy, Protein, Fat, Carb, Sugar, FoodGroup, Distance)
     # m, item_purchased, item_needed, sections_visited, order_of_visits, recipe_complete, path, item_sections = optimize_shopping(grocery_list, IDother, Utility, Item, Time, Energy, Protein, Fat, Carb, Sugar, FoodGroup, Distance)
+    # m, item_purchased, item_needed, sections_visited, order_of_visits, recipe_complete, path, item_sections = optimize_shopping(grocery_list, IDother, Utility, Item, Time, Energy, Protein, Fat, Carb, Sugar, FoodGroup, Distance)
+    # if m.status == gp.GRB.OPTIMAL:
+    #     # print('item purchased', item_purchased)
+    #     # print('item needed', item_needed)
+    #     # print('sections visited', sections_visited)
+    #     # print('order of visits', order_of_visits)
+    #     # print('recipe complete', recipe_complete)
+    #     # print('path', path)
+    #     print('item sections', item_sections['Pie, coconut custard, commercially prepared'])
+    #     section_item_purchased_map = {}
+    #     for item in item_purchased:
+    #         section = item_sections[item]
+    #         print('item', item, 'section', section)
+    #         if section in section_item_purchased_map:
+    #             section_item_purchased_map[section].append(item)
+    #         else:
+    #             section_item_purchased_map[section] = [item]
+    #     # print('section item purchased map', section_item_purchased_map)
+    #         # for i in item_purchased:
+    #         #     if item_purchased[i] != 0:
+    #         #         print(i,item_purchased[i])
+        
+    #         # for i in item_needed:
+    #         #     if item_needed[i] != 0:
+    #         #         print(i, item_needed[i])
+    #     path_values = sorted(path)
+    #     print('path values', path_values)
+
+    #     #path by sections and items
+    #     instructions = []
+    #     for value in path_values:
+    #         section = path[value]
+    #         section_item_dict = {}
+    #         section_item_dict['value'] = value
+            
+    #         # does_section_exist = 
+    #         if section in section_item_purchased_map:
+    #             section_item_dict["section"] = section
+    #             section_item_dict["items"] = section_item_purchased_map[section]
+    #         else:
+    #             section_item_dict["section"] = section
+    #             section_item_dict["items"] = []
+    #         # print(section_item_dict)
+    #         instructions.append(section_item_dict)
+    #     print('********************* INSTRUCTIONS **************************')
+    #     print(instructions)
+            
+    #         # print('section is', section)
+    #     return {'instructions':instructions}
     if m.status == gp.GRB.OPTIMAL:
-        # print('item purchased', item_purchased)
-        # print('item needed', item_needed)
-        # print('sections visited', sections_visited)
-        # print('order of visits', order_of_visits)
-        # print('recipe complete', recipe_complete)
-        # print('path', path)
-        # print('item sections', item_sections['Peppers, jalapeno, raw'])
+        print('OPTIMAL OBJECTIVE TIME') 
+        
+        optimal_time_minutes = round(m.objVal*5/60, 2)
+        print(optimal_time_minutes)
+        print(item_purchased)
+        # print(item_needed)
+            # for i in item_purchased:
+            #     if item_purchased[i] != 0:
+            #         print(i,item_purchased[i])
         section_item_purchased_map = {}
         for item in item_purchased:
             section = item_sections[item]
+            print('item', item, 'section', section)
             if section in section_item_purchased_map:
                 section_item_purchased_map[section].append(item)
             else:
                 section_item_purchased_map[section] = [item]
-        # print('section item purchased map', section_item_purchased_map)
-            # for i in item_purchased:
-            #     if item_purchased[i] != 0:
-            #         print(i,item_purchased[i])
+        print('section item purchased map', section_item_purchased_map)
         
-            # for i in item_needed:
-            #     if item_needed[i] != 0:
-            #         print(i, item_needed[i])
-        path_values = sorted(path)
-        print('path values', path_values)
-
-        #path by sections and items
-        instructions = []
-        for value in path_values:
-            section = path[value]
+        for (i,j) in order_of_visits:
+            if order_of_visits[i,j].x != 0:
+                print((i,j),order_of_visits[i,j].x)         
+      
+        
+        visit_dict = {}
+        for section in path:
+            if section != 'Entry' and section != 'Exit':
+                # print(p, path[p].x*section_visited[p].x)
+                if path[section].x*section_visited[section].x !=0:
+                    visit_dict[section] = path[section].x*section_visited[section].x     
+                
+            else:
+                # print(p, path[p].x)
+                visit_dict[section] = path[section].x*section_visited[section].x
+                if section == 'Exit':
+                    visit_dict['Exit']=26.0
+        print('visit dict')
+        print(visit_dict)
+        order_list = sorted(visit_dict.items(), key=lambda x: x[1], reverse=False)
+        print(order_list)
+        output_list = []
+        
+        for section, value in order_list:
+            print(section, value)
+            # output_list.append(i[0])
             section_item_dict = {}
             section_item_dict['value'] = value
-            
-            # does_section_exist = 
             if section in section_item_purchased_map:
                 section_item_dict["section"] = section
                 section_item_dict["items"] = section_item_purchased_map[section]
             else:
                 section_item_dict["section"] = section
                 section_item_dict["items"] = []
-            # print(section_item_dict)
-            instructions.append(section_item_dict)
-        print('********************* INSTRUCTIONS **************************')
-        print(instructions)
+            output_list.append(section_item_dict)
             
-            # print('section is', section)
-        return {'instructions':instructions}
+        return {'instructions':output_list, 'time': optimal_time_minutes}
         # return {'item_purchased': item_purchased, 'item_needed': item_needed, 'sections_visited': sections_visited, 'order_of_visits': order_of_visits, 'recipe_complete': recipe_complete}
         
-grocery_list = [["Soy flour, full-fat, roasted"]]
-optimize(grocery_list)
+grocery_list = [['Soy flour, full-fat, roasted', 'Pie, coconut custard, commercially prepared']]
+print('ultimate result:', optimize(grocery_list))
