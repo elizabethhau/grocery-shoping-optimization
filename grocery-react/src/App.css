@@ -9,17 +9,19 @@ main {
   margin: 0 auto;
   max-width: 1000px;
   min-height: 100vh;
-  padding: 72px 0;
+  padding: 30px 0;
   /* text-align: center; */
 }
 h1 {
   font-size: 45px;
+  flex-direction: row;
 }
 h2 {
   margin-top: 1.5em;
 }
 p {
   font-size: 16px;
+  word-break: keep-all;
 }
 a {
   border-bottom: 1px solid white;
