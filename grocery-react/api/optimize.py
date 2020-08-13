@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify, send_from_directory, Response
 import api.optimization_helper as op
-
+"""
+This is the API endpoint that gets hit fron the front end when the
+grocery form is submitted. 
+"""
 app = Flask(__name__)
 
 @app.route('/', defaults={'path': ''})
@@ -12,7 +15,6 @@ def optimize(path):
     userName = input['userName']
     ingredients = input['ingredients']
     recipes = input['recipes']
-    # print('recipes', recipes)
     combined_ingredients.append([ingredient['name'] for ingredient in ingredients])
     recipe_ingredients = [recipe['name'] for recipe in recipes]
     combined_ingredients += recipe_ingredients
@@ -20,21 +22,14 @@ def optimize(path):
     print(recipe_ingredients)
     # combined_ingredients.append([recipe['name'] for recipe in recipes])
  
-     
     recipes = input['recipes']
     output = {}
     output['userName'] = userName
-    # print(result)
-    print('INGREDIENTS')
-    print(ingredients)
-    print('RECIPES')
-    print(recipes)
-    
-    # print(result)
-
-  
+    # print('INGREDIENTS')
     # print(ingredients)
+    # print('RECIPES')
     # print(recipes)
+  
     print('INPUT TO OPTIMIZE')
     print(combined_ingredients)
     optimization_result = op.optimize(combined_ingredients)

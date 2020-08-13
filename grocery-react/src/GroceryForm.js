@@ -9,17 +9,10 @@ const GroceryForm = props => {
   const [username, setUsername] = useState(props.username ? props.username : '')
   const itemOptions = Constants.items
   const recipeOptions = Constants.recipes
-  // [
-  //   { name: 'Garlic Chicken (Butter, Chicken breast, Garlic powder, Onion powder, salt)', id: 1, type: TYPE_RECIPE },
-  //   { name: 'Butternut Squash (Butternut squash, Olive Oil, Garlic, Salt, Ground Black Pepper)', id: 2, type: TYPE_RECIPE },
-  //   { name: 'Brown Butter-Basted Steak (thick bone-in rib eye, salt, ground pepper, rosemary, garlic, unsalted butter)', id: 3, type: TYPE_RECIPE }
-  // ]
   const [selectedIngredients, setSelectedIngredients] = useState([])
   const [selectedRecipes, setSelectedRecipes] = useState([])
-  // const [outputInstructions, setOutputInstructions] = useState([])
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  // const [estimatedTime, setEstimatedTime] = useState()
   const [optimizeResult, setOptimizeResult] = useState({
     estimatedTime: null,
     instructions: []
@@ -52,7 +45,6 @@ const GroceryForm = props => {
   }
 
   useEffect(() => {
-    // setOutputInstructions(outputInstructions)
     setOptimizeResult(optimizeResult)
   }, [optimizeResult])
 
@@ -112,23 +104,17 @@ const GroceryForm = props => {
             })
 
             if (response.ok) {
-              console.log('response successful')
+              // console.log('response successful')
               let result = await response.text()
-              console.log(result)
-              console.log(JSON.parse(result))
+              // console.log(result)
+              // console.log(JSON.parse(result))
               result = JSON.parse(result)
-              // setOutputUserName(result.userName)
-              // setEstimatedTime(result.time)
-              console.log('TIME IS')
-              console.log(result.time)
-              // setOutputInstructions(result.instructions)
-              // setOutputRecipes(result.recipes)
               setOptimizeResult(result)
               setIsLoading(false)
-              console.log(result.instructions)
+              // console.log(result.instructions)
 
             } else {
-              console.log('response failed')
+              // console.log('response failed')
               setIsLoading(false)
             }
 
@@ -144,36 +130,15 @@ const GroceryForm = props => {
               {optimizeResult.time && <p>Estimated time required: {optimizeResult.time} minutes</p>}
               <List bulleted>
                 {optimizeResult && optimizeResult.instructions.map(step => {
-                  // console.log('got in output ingredients map!!')
-                  // console.log(step)
                   return (
                     <Fragment>
                       <List.Item key={step.section}>{step.section}</List.Item>
                       <List.List>
                         {
                           step.items.map(item => {
-                            // console.log('got in sub list')
-                            // console.log(item)
-                            // if(selectedRecipes.length > 0) {
-                            //   selectedRecipes.forEach(recipe => {
-                            //   console.log('got in items recipe sub list!')
-                            //   const ingredients = recipe.name
-                            //   console.log(item + ingredients)
-                            //   if (ingredients.includes(item)) {
-                            //     return (<li>{item}({recipe.recipe})</li>)
-                            //   } 
-                            //   return (
-                            //     // <List.Item key={item} content={item}/>
-                            //     <li>{item}</li>
-                            //   )
-                              
-                            // })
-                            // } else {
                               return (
-                              // <List.Item key={item} content={item}/>
                               <li>{item}</li>
                             )
-                            // }
                             
                           })
                         }
@@ -182,14 +147,6 @@ const GroceryForm = props => {
 
                   )
                 })}
-
-                {/* {outputRecipes && outputRecipes.map(recipe => {
-                  console.log('got in output recipe map!!')
-                  console.log(recipe)
-                  return (
-                    <List.Item key={recipe.name}>{recipe.name}</List.Item>
-                  )
-                })} */}
               </List>
 
             </Card.Description>

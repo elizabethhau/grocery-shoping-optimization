@@ -1,29 +1,34 @@
-![React Logo](https://github.com/vercel/vercel/blob/master/packages/frameworks/logos/react.svg)
 
-# React Example
+# 15.066 Optimization Final Project - Grocery Shopping Path Optimzer - Angelica
 
-This directory is a brief example of a [React](https://reactjs.org/) app with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction) that can be deployed with Vercel and zero configuration.
+This directory contains the final project for Team 7 - The Well Made Heptade consisting of Inigo de Palacio, Elizabeth Hau, Luke Higgins, Wren Jiang, Andrew Tindall, and Lampros Tsonzos
 
-## Deploy Your Own
+## Angelica - Shop Efficient, Shop Intelligent
 
-Deploy your own React project, along with Serverless Functions, with Vercel.
+### Motivation
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/vercel/tree/master/examples/create-react-app-functions)
+* COVID–19 has impacted how we shop for groceries​
+* Critical to prioritize items needed​
+* Meet nutritional requirements
+* ​Reduce exposure time​
+* Bottom up consumer-based approach
 
-_Live Example: https://create-react-app.now-examples.now.sh/_
+### Overview
+* Objective: minimize exposure to COVID-19 by minimizing time in store​
+* Subject to:​
+  * Satisfying dietary requirements (minimum protein, fat, carbs, sugar, calories)​
+  * Satisfying utility needs​
 
-### How We Created This Example
+​Angelica will figure out:​
+* Which sections to visit​
+* In which order to visit them
+* ​What items to buy in the sections visited​
+* Total time spent in-store
 
-To get started with React, along with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction), with Vercel, you can use the [Create-React-App CLI](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) to initialize the project:
+### Project Structure
 
-```shell
-$ npx create-react-app my-app
-```
-
-### Deploying From Your Terminal
-
-You can deploy your new React project, along with [Serverless Functions](https://vercel.com/docs/v2/serverless-functions/introduction), with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-```shell
-$ vercel
-```
+* `api` folder contains the actual API endpoint the front-end calls when users submit the grocery form
+  * `optimze.py` is the python endpoint hit by the front-end that calls the optimization logic
+  * `optimization_helper.py` contains all the optimization logic
+* `data` folder has all the static data used in the project, which includes all the grocery items, their respective nutritional data and the distances between the various sections in the grocery store
+* `src` contains the React code used to build the front-end
